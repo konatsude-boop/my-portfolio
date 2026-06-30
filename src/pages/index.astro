@@ -1,0 +1,338 @@
+---
+import { getCollection } from 'astro:content';
+import { Image } from 'astro:assets';
+import topPc from '../assets/top_pc.jpeg';
+import topSm from '../assets/top_sm.jpeg';
+import iconImg from '../assets/loding_logo.png';
+import sns from '../assets/sns_icon.png';
+import BaseHead from '../components/BaseHead.astro';
+import Footer from '../components/Footer.astro';
+import Header from '../components/Header.astro';
+import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
+
+const recentPosts = (await getCollection('blog'))
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
+  .slice(0, 3);
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
+	</head>
+	<body>
+		<Header />
+		<main>
+			<div class="hero">
+				<Image src={topPc} alt="pc" class="hero-bg pc-only" />
+			  <Image src={topSm} alt="sm" class="hero-bg mobile-only" />
+			  <div class="hero-text">
+			    <h1>kii</h1>
+			    <p>デザイナー / クリエイター</p>
+			  </div>
+			  <div class="scroll-hint">
+			    <span>SCROLL</span>
+			    <div class="scroll-line"></div>
+			  </div>
+			</div>
+
+<section class="content">
+  <div class="top_blog">
+    <h2>最新記事</h2>
+    <div class="blog_scroll">
+      <ul class="blog_li">
+        {recentPosts.map(post => (
+          <li>
+            <a class="top_blist" href={`/blog/${post.id}/`}>
+              <p class="blog_date">{post.data.pubDate.toLocaleDateString('ja-JP')}</p>
+              <p class="blog_title">{post.data.title}</p>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
+    <div class="blog_link"><a href="/blog">MORE</a></div>
+  </div>
+
+  <div class="top_about">
+    <div class="about_visual">
+      <img src={iconImg.src} alt="アイコン" />
+    </div>
+    <div class="about_body">
+      <p class="eyebrow">About</p>
+      <h2>私について</h2>
+      <h3>kii</h3>
+      <p>よろしくお願いします</p>
+      <div class="about_link"><a href="/about">MORE</a></div>
+    </div>
+  </div>
+</section>
+		</main>
+      <div class="social-links">
+        <a href="https://twitter.com/あなたのID" target="_blank" class="social-bubble">
+          <Image src={sns} alt="Twitter" class="sns_icon"/>
+        </a>
+      </div>
+		<Footer />
+	</body>
+</html>
+<style>
+html,body{
+  overflow-x: hidden;
+}
+:global(.hero-bg) {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: right top;
+}
+.hero {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  z-index: -1;
+  overflow: hidden;
+}
+.top_blist{
+	text-decoration: none;
+}
+.hero-bg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: right top; 
+}
+.hero-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  color: white;
+}
+:global(.pc-only) { display: block; }
+:global(.mobile-only) { display: none; }
+@media (max-width: 768px) {
+  :global(.pc-only) { display: none; }
+  :global(.mobile-only) { display: block; }
+  :global(.mobile-only) {
+    object-position: 150% center;
+  }
+}
+
+.top_blog {
+  position: relative;
+  margin-top: 90vh;
+  background: rgba(255,255,255,0.97);
+  padding: 3rem 0 3rem;
+  border-radius: 32px 32px 0 0;
+  box-shadow: 0 -8px 30px rgba(0,0,0,0.08);
+  text-align: center;
+}
+.top_blog h2 {
+  padding: 0 0 36px 0;
+  text-align: center;
+  font-size: 1.6rem;
+  letter-spacing: 0.05em;
+  position: relative;
+}
+.top_blog h2::after {
+  content: '';
+  display: block;
+  width: 40px;
+  height: 3px;
+  background: #e0a6ab;
+  margin: 14px auto 0;
+  border-radius: 2px;
+}
+
+/* 横スクロールカルーセル */
+.blog_scroll {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+.blog_scroll::-webkit-scrollbar {
+  display: none;
+}
+.blog_li {
+  display: flex;
+  gap: 1.2rem;
+  padding: 0 4.5rem;
+  width: max-content;
+  margin: 0 auto;
+}
+.blog_li li {
+  margin: 0;
+  padding: 0;
+  border-radius: 20px;
+  width: 240px;
+  flex-shrink: 0;
+  border: none;
+  list-style: none;
+  background: #fdf6f3;
+  overflow: hidden;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  box-shadow: 0 4px 14px rgba(224,166,171,0.18);
+}
+.blog_li a {
+  color: #000;
+  display: block;
+  padding: 1.5rem;
+}
+.blog_li li:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 24px rgba(224,166,171,0.28);
+}
+.blog_date {
+  font-size: 0.8rem;
+  color: #b88a8f;
+  letter-spacing: 0.05em;
+}
+.blog_title {
+  font-size: 18px;
+  font-weight: 600;
+  padding-top: 6px;
+  padding-bottom: 0;
+}
+.blog_link {
+  margin-top: 2.5em;
+}
+
+/* About：写真＋テキストの非対称レイアウト */
+.top_about {
+  margin: 0;
+  background: #fdf6f3;
+  padding: 0;
+  display: flex;
+  align-items: stretch;
+  min-height: 60vh;
+}
+.about_visual {
+  flex: 1;
+  background: linear-gradient(135deg, #f0b8bd, #e0a6ab);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.about_visual img {
+  width: 55%;
+  border-radius: 50%;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+}
+.about_body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 3rem 4rem;
+}
+.about_body .eyebrow {
+  font-size: 0.8rem;
+  letter-spacing: 0.15em;
+  color: #b88a8f;
+  margin: 0 0 0.3em;
+}
+.about_body h2 {
+  font-size: 1.7rem;
+  margin: 0 0 1em;
+}
+.about_body h3 {
+  font-size: 1.2rem;
+  margin: 0 0 0.5em;
+}
+.about_body p {
+  margin: 0 0 1.5em;
+  color: rgb(var(--gray-dark));
+}
+.about_body .about_link a,
+.blog_link a {
+  display: inline-block;
+  text-align: center;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  padding: 14px 48px;
+  background: linear-gradient(135deg, #f0b8bd, #e0a6ab);
+  color: #fff;
+  border-radius: 999px;
+  box-shadow: 0 6px 16px rgba(224,166,171,0.35);
+}
+
+@media (max-width: 720px) {
+  .top_about {
+    flex-direction: column;
+    min-height: auto;
+  }
+  .about_visual {
+    padding: 2.5rem 0;
+  }
+  .about_visual img {
+    width: 140px;
+  }
+  .about_body {
+    padding: 2.5rem 1.5rem;
+    text-align: center;
+    align-items: center;
+  }
+}
+.social-links {
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  top: auto;
+  width: auto;
+  padding: 0;
+  background: none;
+  z-index: 50;
+}
+.social-bubble {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #f0b8bd, #e0a6ab);
+  box-shadow: 0 6px 18px rgba(224,166,171,0.45);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  animation: floatBubble 3s ease-in-out infinite;
+}
+.social-bubble:hover {
+  transform: scale(1.1);
+  box-shadow: 0 10px 24px rgba(224,166,171,0.6);
+}
+.sns_icon {
+  width: 28px;
+  height: 28px;
+  filter: brightness(0) invert(1); /* アイコンを白く */
+}
+@keyframes floatBubble {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+
+@media (max-width: 720px) {
+  .social-links {
+    right: 16px;
+    bottom: 16px;
+  }
+  .social-bubble {
+    width: 55px;
+    height: 55px;
+  }
+  .sns_icon {
+    width: 24px;
+    height: 24px;
+  }
+}
+</style>

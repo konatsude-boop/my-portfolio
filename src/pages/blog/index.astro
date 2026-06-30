@@ -1,0 +1,107 @@
+---
+import { Image } from 'astro:assets';
+import { getCollection } from 'astro:content';
+import BaseHead from '../../components/BaseHead.astro';
+import Footer from '../../components/Footer.astro';
+import FormattedDate from '../../components/FormattedDate.astro';
+import Header from '../../components/Header.astro';
+import { SITE_DESCRIPTION, SITE_TITLE } from '../../consts';
+
+const posts = (await getCollection('blog')).sort(
+	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
+);
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
+	</head>
+	<body>
+		<Header />
+		<main>
+			<section>
+				<ul class="blog_ul">
+					{
+						posts.map((post) => (
+							<li class="blog_li">
+								<a href={`/blog/${post.id}/`}>
+									{post.data.heroImage && (
+										<Image width={720} height={360} src={post.data.heroImage} alt="" />
+									)}
+									<h4 class="title">{post.data.title}</h4>
+									<p class="date">
+										<FormattedDate date={post.data.pubDate} />
+									</p>
+								</a>
+							</li>
+						))
+					}
+				</ul>
+			</section>
+		</main>
+		<Footer />
+	</body>
+</html>
+<style>
+main {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 8vh 1.5rem 4rem;
+}
+.blog_ul {
+  position: relative;
+  margin: 4vh 0 0 0;
+  padding: 0;
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.8rem;
+  list-style: none;
+}
+.blog_li {
+  list-style: none;
+  border: none;
+  margin: 0;
+  padding: 0;
+  border-radius: 20px;
+  overflow: hidden;
+  background: #fdf6f3;
+  box-shadow: 0 4px 14px rgba(224,166,171,0.18);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+.blog_li:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 24px rgba(224,166,171,0.28);
+}
+.blog_li a {
+  text-decoration: none;
+  color: #000;
+  padding: 0;
+  display: block;
+}
+.blog_li img {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  display: block;
+}
+.title {
+  font-size: 18px;
+  font-weight: 600;
+  padding: 1.2rem 1.2rem 0.3rem;
+  margin: 0;
+}
+.date {
+  font-size: 0.8rem;
+  color: #b88a8f;
+  letter-spacing: 0.05em;
+  padding: 0 1.2rem 1.2rem;
+  margin: 0;
+}
+@media (max-width: 720px) {
+  .blog_ul {
+    grid-template-columns: 1fr;
+  }
+}
+</style>

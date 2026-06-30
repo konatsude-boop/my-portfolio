@@ -1,0 +1,334 @@
+---
+import { Image } from 'astro:assets';
+import iconImg from '../assets/loding_logo.png';
+import photoshopIcon from '../assets/photoshop_5968520.png';
+import illustratorIcon from '../assets/illustrator_5968472.png';
+import indesignIcon from '../assets/indesign_5968482.png';
+import BaseHead from '../components/BaseHead.astro';
+import Footer from '../components/Footer.astro';
+import Header from '../components/Header.astro';
+import { SITE_TITLE } from '../consts';
+
+const skills = [
+  { name: 'Photoshop', icon: photoshopIcon, level: 80 },
+  { name: 'Illustrator', icon: illustratorIcon, level: 75 },
+  { name: 'InDesign', icon: indesignIcon, level: 60 },
+];
+
+const stories = [
+  {
+    label: '小学生',
+    title: '工作・イラストを描く',
+    text: 'ノートに自分の考えた物語やキャラクターを描くようになる。ファッションデザイナーにあこがれる',
+  },
+  {
+    label: '中学生',
+    title: 'デザインに興味を持つ',
+    text: 'ファッションデザイナーを目指す',
+  },
+  {
+    label: '高校生',
+    title: '木工の勉強',
+    text: '木工が面白そうでなんとなくやってみた。想像以上に大変でした。',
+  },
+  {
+    label: '専門学生',
+    title: 'Webデザインに触れる',
+    text: 'これからの時代、Webデザインは必要不可欠な存在になるのではないかと思っていた。',
+  },
+  {
+    label: '現在',
+    title: 'デザイン関連の仕事',
+    text: 'グラフィック、Webどちらも仕事をしながらお勉強中。',
+  },
+];
+---
+<!doctype html>
+<html lang="ja">
+  <head>
+    <BaseHead title={`About | ${SITE_TITLE}`} description="私について" />
+  </head>
+  <body>
+    <Header />
+    <main>
+      <section class="about-intro">
+        <p class="eyebrow">About Me</p>
+        <h1>わたしについて</h1>
+        <div class="intro-row">
+					<Image src={iconImg} alt="プロフィールアイコン" class="about-photo" width={300} height={300} />
+          <div class="intro-text">
+            <p class="name">kii</p>
+            <p>
+              デザインとWeb制作を勉強中です。</br>よろしくお願いします。
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section class="story-section">
+        <p class="eyebrow">Story</p>
+        <h2>デザイナーを目指すまで</h2>
+
+        <div class="slider" id="story-slider">
+          <div class="slider-track" id="slider-track">
+            {stories.map((s) => (
+              <div class="slide">
+                <span class="slide-label">{s.label}</span>
+                <h3>{s.title}</h3>
+                <p>{s.text}</p>
+              </div>
+            ))}
+          </div>
+          <div class="slider-controls">
+            <button id="prev-btn" aria-label="前へ">←</button>
+            <div class="slider-dots" id="slider-dots"></div>
+            <button id="next-btn" aria-label="次へ">→</button>
+          </div>
+        </div>
+      </section>
+      <section class="skill-section">
+        <p class="eyebrow">Skill</p>
+        <h2>使用ツール</h2>
+
+        <div class="skill-grid">
+          {skills.map((s) => (
+            <div class="skill-card">
+              <Image src={s.icon} alt={s.name} width={56} height={56} class="skill-icon" />
+              <p class="skill-card-name">{s.name}</p>
+              <div class="skill-bar-track">
+                <div class="skill-bar-fill" style={`width: ${s.level}%`}></div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+    </main>
+    <Footer />
+<script>
+  function initSlider() {
+    const track = document.getElementById('slider-track');
+    const dotsWrap = document.getElementById('slider-dots');
+    const prevBtn = document.getElementById('prev-btn');
+    const nextBtn = document.getElementById('next-btn');
+
+    if (!track || !dotsWrap || !prevBtn || !nextBtn) return;
+
+    const slides = track.children;
+    let current = 0;
+
+    dotsWrap.innerHTML = '';
+    for (let i = 0; i < slides.length; i++) {
+      const dot = document.createElement('span');
+      if (i === 0) dot.classList.add('active');
+      dot.addEventListener('click', () => goTo(i));
+      dotsWrap.appendChild(dot);
+    }
+
+    function update() {
+      track.style.transform = `translateX(-${current * 100}%)`;
+      Array.from(dotsWrap.children).forEach((dot, i) => {
+        dot.classList.toggle('active', i === current);
+      });
+    }
+
+    function goTo(index) {
+      current = (index + slides.length) % slides.length;
+      update();
+    }
+
+    prevBtn.addEventListener('click', () => goTo(current - 1));
+    nextBtn.addEventListener('click', () => goTo(current + 1));
+  }
+
+  initSlider();
+</script>
+  </body>
+</html>
+
+<style>
+  main {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 15vh 1.5rem 6rem;
+  }
+  .eyebrow {
+    font-size: 0.8rem;
+    letter-spacing: 0.15em;
+    color: #b88a8f;
+    margin: 0 0 0.3em;
+    text-align: center;
+  }
+  .about-intro h1 {
+    text-align: center;
+    font-size: 1.8rem;
+    margin: 0 0 2.5em;
+  }
+  .intro-row {
+    display: flex;
+    align-items: center;
+    gap: 2.5em;
+    justify-content: center;
+  }
+  .about-photo {
+    width: 180px;
+    height: 180px;
+    border-radius: 50%;
+    object-fit: cover;
+    flex-shrink: 0;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+  }
+  .intro-text .name {
+    font-weight: 700;
+    font-size: 1.2rem;
+    margin: 0 0 0.5em;
+  }
+  .intro-text p:not(.name) {
+    line-height: 1.9;
+    color: rgb(var(--gray-dark));
+  }
+
+  .story-section {
+    margin-top: 6em;
+  }
+  .story-section h2 {
+    text-align: center;
+    font-size: 1.5rem;
+    margin: 0 0 3em;
+  }
+
+  .slider {
+    position: relative;
+    overflow: hidden; /* 枠としての「窓」はここで作る */
+    border-radius: 20px;
+  }
+  .slider-track {
+    display: flex;
+    transition: transform 0.4s ease;
+    /* width や overflow はここには書かない */
+  }
+  .slide {
+    width: 100%;
+    flex-shrink: 0;
+    background: #fdf6f3;
+    padding: 3em 2.5em;
+    box-sizing: border-box;
+  }
+  .slide-label {
+    display: inline-block;
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+    color: #fff;
+    background: linear-gradient(135deg, #f0b8bd, #e0a6ab);
+    padding: 0.3em 1em;
+    border-radius: 999px;
+    margin-bottom: 1em;
+  }
+  .slide h3 {
+    font-size: 1.3rem;
+    margin: 0 0 0.8em;
+  }
+  .slide p {
+    line-height: 1.9;
+    color: rgb(var(--gray-dark));
+    margin: 0;
+  }
+
+  .slider-controls {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1.5em;
+    margin-top: 1.5em;
+  }
+  .slider-controls button {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: none;
+    background: #fdf6f3;
+    color: #e0a6ab;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: background 0.2s ease;
+  }
+  .slider-controls button:hover {
+    background: #f0d9db;
+  }
+  .slider-dots {
+    display: flex;
+    gap: 0.5em;
+  }
+  .slider-dots span {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #f0d9db;
+    cursor: pointer;
+    transition: background 0.2s ease;
+  }
+  .slider-dots span.active {
+    background: #e0a6ab;
+  }
+  .skill-section {
+  margin-top: 6em;
+}
+.skill-section h2 {
+  text-align: center;
+  font-size: 1.5rem;
+  margin: 0 0 3em;
+}
+.skill-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5em;
+}
+.skill-card {
+  background: #fdf6f3;
+  border-radius: 20px;
+  padding: 2em 1.2em;
+  text-align: center;
+  box-shadow: 0 4px 14px rgba(224,166,171,0.15);
+  transition: transform 0.25s ease;
+}
+.skill-card:hover {
+  transform: translateY(-4px);
+}
+.skill-icon {
+  width: 56px;
+  height: 56px;
+  object-fit: contain;
+  margin-bottom: 0.8em;
+}
+.skill-card-name {
+  font-weight: 600;
+  font-size: 0.95rem;
+  margin: 0 0 1em;
+}
+.skill-bar-track {
+  width: 100%;
+  height: 6px;
+  background: #f0d9db;
+  border-radius: 20px;
+  overflow: hidden;
+}
+.skill-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #f0b8bd, #e0a6ab);
+  border-radius: 20px;
+}
+
+@media (max-width: 720px) {
+  .skill-grid {
+    grid-template-columns: 1fr;
+  }
+    .intro-row {
+      flex-direction: column;
+      text-align: center;
+      gap: 1.5em;
+    }
+    .slide {
+      padding: 2em 1.5em;
+    }
+  }
+</style>
+

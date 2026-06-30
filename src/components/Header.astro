@@ -1,0 +1,76 @@
+---
+import { SITE_TITLE } from '../consts';
+import HeaderLink from './HeaderLink.astro';
+---
+<header>
+  <nav>
+    <h2><a href="/"><img  class="nav_logo" src="/header_logo.png" alt="ロゴ" /></a></h2>
+    <div class="internal-links">
+      <HeaderLink href="/">
+        <img  class="nav_icon" src="/home_icon.png" alt="ロゴ" />
+      </HeaderLink>
+      <HeaderLink href="/blog">
+        <img  class="nav_icon" src="/blog_icon.png" alt="ロゴ" />
+      </HeaderLink>
+      <HeaderLink href="/about">
+        <img  class="nav_icon" src="/pro_icon.png" alt="ロゴ" />
+      </HeaderLink>
+    </div>
+  </nav>
+</header>
+<style>
+header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 10;
+  background: transparent; /* 初期は透明 */
+  box-shadow: none;
+  transition: background 0.3s ease, box-shadow 0.3s ease;
+}
+header.scrolled {
+  background: #fff;
+  box-shadow: 0 2px 8px rgba(var(--black), 5%);
+}
+  h2 { margin: 0; font-size: 1em; }
+  h2 a, h2 a.active { text-decoration: none; }
+  nav {
+    display: flex;
+    align-items: center;
+    padding: 0 15px;
+    justify-content: space-between;
+  }
+  nav a {
+    padding: 0.5em;
+    color: var(--black);
+    text-decoration: none;
+    font-weight: 600;
+    padding: 0.3em;
+    border-bottom: 3px solid transparent;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  nav a.active {
+    border-bottom-color: var(--pink); /* 選択中の下線色 */
+  }
+  .nav_icon {
+    width: 44px; /* 60pxだと少し大きいので調整 */
+    height: 44px;
+  }
+  .internal-links {
+    display: flex;
+    align-items: center;
+    gap: 24px; /* アイコン同士の間隔 */
+    margin-left: 15px;
+    margin-top: 15px;
+  }
+  .nav_logo{
+    width: 60px;
+    height: 60px;
+    padding-top: 14px;
+  }
+  @media (max-width: 720px) {
+  }
+</style>
