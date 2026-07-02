@@ -2,6 +2,7 @@
 title: '初めてのブログ'
 description: 'サイト開設初ブログ'
 pubDate: '2026-06-30'
+heroImage: '../../assets/loding_logo.png'
 ---
 
 ## 自己紹介
